@@ -120,6 +120,17 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 				var duration = moment.duration(currentDate.diff(createDateTime));
 				$scope.shortUrls[i].differenceInHours = duration.get("hours");
 			}
-		}
+		};
+
+		$scope.loadBarChart = function(){
+			$scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+			$scope.series = ['Url Clicks Count'];
+
+			$scope.data = [
+				[65, 59, 80, 81, 56, 55, 40]
+			];
+		};
+
+		$scope.loadBarChart();
 
 	}]);
