@@ -1,0 +1,117 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="urlShortener">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Url Shortner App</title>
+
+<!-- SCROLLS -->
+
+<!-- load bootstrap -->
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/bootstrap/css/datatables.bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+<link rel="stylesheet" href="assets/css/paddingmargin.css">
+
+<!-- load bootstrap -->
+<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> -->
+
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:50px; }
+		#shorturls-list 				{ margin-bottom:30px; }
+		#shorturls-form 	 			{ margin-bottom:50px; }
+	</style>
+
+	<!-- SPELLS -->
+	<script src="assets/js/jquery-2.1.4.min.js"> </script>
+<!-- 	<script src="assets/bootstrap/js/bootstrap.min.js"> </script> -->
+	<script src="assets/js/jquery.dataTables.min.js"></script>
+
+	<script src="assets/js/angular.min.js"></script><!-- load angular -->
+	<script src="app.module.js"></script> <!-- load our main application -->
+
+	<script src="controllers/main.controller.js"></script> <!-- load up our main.controller -->
+	<script src="services/urlshortener.service.js"></script> <!-- load our urlshortener service -->
+
+	<script src="assets/bootstrap/js/dataTables.bootstrap.js"></script>
+	<!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
+	<script type="text/javascript" src="assets/js/angular-recaptcha.min.js"></script>
+</head>
+
+<!-- SET THE CONTROLLER -->
+<body ng-controller="mainController">
+	<div class="container">
+
+		<!-- HEADER AND ShortUrls COUNT -->
+<!-- 		<div class="jumbotron text-center">
+	<h1>Total ShortUrls <span class="label label-info">{{ shortUrls.length }}</span></h1>
+</div> -->
+
+		<!-- FORM TO CREATE TODOS -->
+		<div id="shorturls-form" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<form name="myForm" role="form">
+					<div class="form-group" ng-class="{ 'has-error' : myForm.originalUrl.$invalid && !myForm.originalUrl.$pristine }">
+						<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+						<input type="text" class="form-control input-lg text-center"
+							id="originalUrl" name="originalUrl" required="required" autocomplete="off"
+							placeholder="Enter original URL" ng-model="formData.originalUrl">
+							<p ng-show="myForm.originalUrl.$invalid && !myForm.originalUrl.$pristine" class="help-block">Please enter a value.</p>
+					</div>
+
+					<div class="form-group">
+						<p class="text-center mr-left0p25" ng-show="loading">
+							<span class="fa fa-spinner fa-spin fa-3x">
+								<div vc-recaptcha key="publicKey" ng-model="captchaResponse"></div>
+							</span>
+						</p>
+					</div>
+
+					<!-- createToDo() WILL CREATE NEW TODOS -->
+					<button type="submit" class="btn btn-primary btn-lg"  ng-disabled="myForm.$invalid" ng-click="shortenUrl()">Shorten Url</button>
+
+					<div ng-show="showGeneratedShortUrl" class="alert alert-success">
+						{{formData.shortUrl}}
+					</div>
+				</form>
+			</div>
+		</div>
+
+
+		<!-- ShortUrls LIST -->
+		<div id="shorturls-list" class="row">
+			<div class="col-sm-10 col-sm-offset-1">
+				<!-- LOOP OVER THE shortUrls IN $scope.shortUrls -->
+				<table id="urlsDataTable" class="table table-striped table-bordered" cellspacing="0">
+					<thead>
+			            <tr>
+			                <th>Original Url </th>
+			                <th>Short Url </th>
+			                <th>Created</th>
+			                <th>Total Clicks </th>
+			            </tr>
+			        </thead>
+					<tbody>
+						<tr ng-repeat="shortUrl in shortUrls">
+							<td>{{ shortUrl.originalUrl }}</td>
+							<td><a ng-href="{{ shortUrl.shortUrl }}" target="_blank"> {{ shortUrl.shortUrl }}</a></td>
+							<td>{{ shortUrl.createDateTime | date }}</td>
+							<td>{{ shortUrl.clicksCount }}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p class="text-center" ng-show="loading">
+					<span class="fa fa-spinner fa-spin fa-3x"></span>
+				</p>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
