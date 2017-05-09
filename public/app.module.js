@@ -1,1 +1,1 @@
-var urlShortener = angular.module('urlShortener', ['vcRecaptcha']);
+var urlShortener = angular.module('urlShortener', ['vcRecaptcha','angularMoment']);

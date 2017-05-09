@@ -13,6 +13,8 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 			// use the service to get all the shorturls
 			UrlShortenerService.get().success(function(data) {
 				$scope.shortUrls = data;
+				$scope.getDifferenceInHours();
+
 				$scope.loading = false;
 				$timeout(loadUrls, 5000);
 
@@ -38,28 +40,31 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 				$scope.loading = true;
 				$scope.formData.uuid = $scope.getIdToShortUrl();
 				$scope.formData.shortUrl = $scope.myDomainName + $scope.formData.uuid;
-				$scope.formData.createDateTime = new Date();
+				$scope.formData.createDateTime = moment(new Date());
 				$scope.formData.clicksCount = 0;
 
 				UrlShortenerService.getShortUrlByOriginalUrl($scope.formData.originalUrl).then(function(data) {
 
-					if(data != null) {
+					if(data.data) {
 						$scope.showGeneratedShortUrl = true;
-						$scope.formData.shortUrl = data.shortUrl;
-						$scope.captchaResponse = null;
+						$scope.formData.shortUrl = data.data.shortUrl;
+						$scope.captchaResponse = "";
 					} else {
 						// call the create function from our service (returns a promise object)
 						UrlShortenerService.create($scope.formData)
-
 						// if successful creation, call our get function to get all the new shorturls
 						.success(function(data) {
 							$scope.showGeneratedShortUrl = true;
 							$scope.loading = false;
 							$scope.formData = {}; // clear the form so our user is ready to enter another
 							table.destroy();
+
+
 							$scope.shortUrls = data; // assign our new list of shorturls
-							$scope.formData.shortUrl = data[0].shortUrl;
-							$scope.captchaResponse = null;
+							$scope.formData.shortUrl = data[data.length-1].shortUrl;
+
+							$scope.getDifferenceInHours();
+
 							$timeout(function () {
 							 table = $('#urlsDataTable').DataTable();
 							}, 100);
@@ -70,6 +75,8 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 
 				});
 			}
+
+			$scope.reset();
 		};
 
 		// DELETE ==================================================================
@@ -100,5 +107,19 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 
 			return shorturl.split("").reverse().join("");
 		};
+
+		$scope.reset = function() {
+	      $scope.captchaResponse = null;
+	      $scope.myForm.$setPristine();
+	    };
+
+		$scope.getDifferenceInHours = function() {
+			for (var i = 0; i < $scope.shortUrls.length; i++) {
+				var currentDate = moment(new Date());
+				var createDateTime = moment($scope.shortUrls[i].createDateTime);
+				var duration = moment.duration(currentDate.diff(createDateTime));
+				$scope.shortUrls[i].differenceInHours = duration.get("hours");
+			}
+		}
 
 	}]);

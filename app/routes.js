@@ -1,4 +1,5 @@
 var ShortUrls = require('./models/shorturls');
+var moment = require('moment');
 
 function getShortUrls(res) {
     ShortUrls.find(function (err, shorturls) {
@@ -10,6 +11,17 @@ function getShortUrls(res) {
 
         res.json(shorturls); // return all shorturls in JSON format
     });
+};
+
+function isUrlExpired(res) {
+    var currentDate = moment(new Date());
+    var createDateTime = moment(res.createDateTime);
+    var duration = moment.duration(currentDate.diff(createDateTime));
+
+    if(duration.get("minutes") > 1)
+        return true;
+    else
+        return false;
 };
 
 module.exports = function (app) {
@@ -25,7 +37,7 @@ module.exports = function (app) {
             if (err)
                 res.send(err);
             else {
-                res.json(data[0]);
+                res.json(data);
             }
         });
     });
@@ -79,8 +91,7 @@ module.exports = function (app) {
                 console.log(data);
                 ShortUrls.findByIdAndUpdate(data[0].id,
                 {
-                    $inc: { clicksCount: 1 },
-                    $set: { createDateTime : new Date()}
+                    $inc: { clicksCount: 1 }
                 },
                 {
                     new: true
@@ -88,7 +99,11 @@ module.exports = function (app) {
                 function (err, data) {
                     if (err) return res.status(500).send("There was a problem while updating.");
                     res.status(200);
-                    res.redirect(data.originalUrl);
+                    if(isUrlExpired(data)) {
+                        res.send({'Message' : 'This url is expired!'});
+                    } else {
+                        res.redirect(data.originalUrl);
+                    }
                 });
             }
         });
@@ -98,4 +113,6 @@ module.exports = function (app) {
     app.get('*', function (req, res) {
         res.sendFile(__dirname + '/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
     });
+
+
 };
