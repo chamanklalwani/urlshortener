@@ -28,6 +28,11 @@ module.exports = function (app) {
 
     // api ---------------------------------------------------------------------
 
+    /* GET api listing. */
+    app.get('/', (req, res) => {
+            res.send('api works');
+    });
+
     // get shortUrl by originalUrl
     app.get('/api/shortenurl/:originalUrl([^~]+)', function (req, res) {
         var originalUrl = req.params.originalUrl;
@@ -46,6 +51,35 @@ module.exports = function (app) {
     app.get('/api/shortenurl/', function (req, res) {
         // use mongoose to get all shortUrls in the database
         getShortUrls(res);
+    });
+
+    // update clicks count
+    app.get('/sh/:shorturl', function (req, res) {
+        ShortUrls.find({
+            shortUrl: { $regex : req.params.shorturl }
+        }, function (err, data) {
+            if (err)
+                res.send(err);
+            else {
+                console.log(data);
+                ShortUrls.findByIdAndUpdate(data[0].id,
+                {
+                    $inc: { clicksCount: 1 }
+                },
+                {
+                    new: true
+                },
+                function (err, data) {
+                    if (err) return res.status(500).send("There was a problem while updating.");
+                    res.status(200);
+                    if(isUrlExpired(data)) {
+                        res.send({'Message' : 'This url is expired!'});
+                    } else {
+                        res.redirect(data.originalUrl);
+                    }
+                });
+            }
+        });
     });
 
     // create shortUrl and send back all shortUrls after creation
@@ -77,35 +111,6 @@ module.exports = function (app) {
                 res.send(err);
 
             getShortUrls(res);
-        });
-    });
-
-    // update clicks count
-    app.get('/sh/:shorturl', function (req, res) {
-        ShortUrls.find({
-            shortUrl: { $regex : req.params.shorturl }
-        }, function (err, data) {
-            if (err)
-                res.send(err);
-            else {
-                console.log(data);
-                ShortUrls.findByIdAndUpdate(data[0].id,
-                {
-                    $inc: { clicksCount: 1 }
-                },
-                {
-                    new: true
-                },
-                function (err, data) {
-                    if (err) return res.status(500).send("There was a problem while updating.");
-                    res.status(200);
-                    if(isUrlExpired(data)) {
-                        res.send({'Message' : 'This url is expired!'});
-                    } else {
-                        res.redirect(data.originalUrl);
-                    }
-                });
-            }
         });
     });
 

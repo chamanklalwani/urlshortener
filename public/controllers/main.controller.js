@@ -1,7 +1,7 @@
 urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService', '$timeout', function($scope, $http, UrlShortenerService, $timeout) {
 		$scope.formData = {};
 		$scope.loading = true;
-		$scope.myDomainName = "http://localhost:8081/sh/";
+		$scope.myDomainName = "http://localhost:3000/sh/";
 		var table = null;
 		$scope.captchaResponse = null;
 		// google captcha public key
