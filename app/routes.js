@@ -1,5 +1,6 @@
 var ShortUrls = require('./models/shorturls');
 var moment = require('moment');
+var ObjectId = require('mongodb').ObjectID;
 
 function getShortUrls(res) {
     ShortUrls.find(function (err, shorturls) {
@@ -18,7 +19,7 @@ function isUrlExpired(res) {
     var createDateTime = moment(res.createDateTime);
     var duration = moment.duration(currentDate.diff(createDateTime));
 
-    if(duration.get("minutes") > 1)
+    if(duration.get("minutes") > 100)
         return true;
     else
         return false;
@@ -31,6 +32,20 @@ module.exports = function (app) {
     /* GET api listing. */
     app.get('/', (req, res) => {
             res.send('api works');
+    });
+
+    // get shortUrl by id
+    app.get('/api/shortenurl/:id', function (req, res) {
+        var id = req.params.id;
+        ShortUrls.find({
+            "_id": ObjectId(id)
+        }, function (err, data) {
+            if (err)
+                res.send(err);
+            else {
+                res.json(data[0]);
+            }
+        });
     });
 
     // get shortUrl by originalUrl
@@ -55,6 +70,7 @@ module.exports = function (app) {
 
     // update clicks count
     app.get('/sh/:shorturl', function (req, res) {
+        console.log('User-Agent: ' + req.headers['user-agent']);
         ShortUrls.find({
             shortUrl: { $regex : req.params.shorturl }
         }, function (err, data) {
@@ -115,9 +131,10 @@ module.exports = function (app) {
     });
 
     // application -------------------------------------------------------------
-    app.get('*', function (req, res) {
+
+    /*app.get('*', function (req, res) {
         res.sendFile(__dirname + '/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
-    });
+    });*/
 
 
 };

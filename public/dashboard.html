@@ -1,0 +1,69 @@
+<div ng-controller="dashboardController" class="jumbotron text-center">
+	<div class="container">
+ 		<div class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-center">
+				<h4 class="heading">Original Url : <small> {{data.originalUrl}} </small></h4>
+				<h4 class="heading">Short Url : {{data.shortUrl}}</h4>
+				<h4 class="heading">Created On : {{data.createDateTime | date : "MMM d, y"}}</h4>
+            </div>
+        </div>
+	</div>
+</div>
+
+<div class="content">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-6">
+				<div class="widget">
+					<div class="widget__header">
+						<i class="gr gr-bar-chart"></i> Clicks Counts vs TimeFrame
+					</div>
+					<div class="widget__body">
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<div class="widget__chart">
+									<canvas class="chart chart-line" height="200" width="400"
+									chart-data="chartData" chart-labels="labels"
+									chart-series="series" chart-colors="colors" chart-click="onClick">
+								</canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="widget">
+				<i class="widget__icon gr gr-dollar"></i>
+				<div class="widget__header">
+					<i class="gr gr-bar-chart"></i> Total Clicks
+				</div>
+				<div class="widget__body">
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<div class="widget__title--lg  text-primary ">{{data.clicksCount}}</div>
+						</div>
+					</div>
+				</div>
+				<div class="widget__footer">
+					<ul class="widget__stats">
+						<li class="default"><span>1</span>Clicks
+							<span>this week</span>
+						</li>
+						<li class="default"><span>2</span>Clicks
+							<span>This month</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+
+	<footer>
+		<p>&copy; 2017 URL Shortening.</p>
+	</footer>
+</div> <!-- /container -->
+</div>

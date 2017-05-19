@@ -20,27 +20,30 @@
 	<!-- 	<script src="assets/bootstrap/js/bootstrap.min.js"> </script> -->
 	<script src="assets/js/jquery.dataTables.min.js"></script>
 
-	<script src="assets/js/angular.min.js"></script><!-- load angular -->
+	<script src="assets/js/angular/angular.min.js"></script><!-- load angular -->
+	<script src="assets/js/angular/angular-ui-router.js"></script><!-- load angular -->
 	<script src="app.module.js"></script> <!-- load our main application -->
 	<script src="app.constants.js"></script> <!-- load application constants -->
-
-	<script src="controllers/main.controller.js"></script> <!-- load up our main.controller -->
-	<script src="services/urlshortener.service.js"></script> <!-- load our urlshortener service -->
+	<script src="app.routes.js"></script> <!-- load application constants -->
 
 	<script src="assets/bootstrap/js/dataTables.bootstrap.js"></script>
 	<!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
 	<script type="text/javascript" src="assets/js/angular-recaptcha.min.js"></script>
 
-	<script src="assets/js/moment.min.js"></script><!-- load moment -->
-	<script src="assets/js/angular-moment.min.js"></script>
+	<script src="assets/js/moment/moment.min.js"></script><!-- load moment -->
+	<script src="assets/js/moment/angular-moment.min.js"></script>
 
-	<script src="assets/js/Chart.min.js"></script>
-  	<script src="assets/js/angular-chart.min.js"></script>
+	<script src="assets/js/chartsjs/Chart.min.js"></script>
+	<script src="assets/js/chartsjs/angular-chart.min.js"></script>
+
+	<script src="services/urlshortener.service.js"></script> <!-- load our urlshortener service -->
+	<script src="controllers/main.controller.js"></script> <!-- load up our main.controller -->
+	<script src="controllers/dashboard.controller.js"></script> <!-- load up our main.controller -->
 
 </head>
 
 <!-- SET THE CONTROLLER -->
-<body ng-controller="mainController">
+<body>
 
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
@@ -58,87 +61,11 @@
 		</div>
 	</nav>
 
-	<!-- Main jumbotron for a primary marketing message or call to action -->
-	<div class="jumbotron text-center">
-		<div class="container">
-			<!-- <h1>Url Shorten App <span class="label label-info">{{ shortUrls.length }}</span></h1> -->
+	<!-- MAIN CONTENT -->
 
-			<!-- Short Url Form -->
-			<div id="shorturls-form" class="row">
-				<div class="col-sm-8 col-sm-offset-2 text-center">
-					<form name="myForm" role="form">
-						<div class="form-group" ng-class="{ 'has-error' : myForm.originalUrl.$invalid && !myForm.originalUrl.$pristine }">
-							<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-							<input type="text" class="form-control input-lg text-center"
-							id="originalUrl" name="originalUrl" required="required" autocomplete="off"
-							placeholder="Enter original URL" ng-model="formData.originalUrl">
-							<p ng-show="myForm.originalUrl.$invalid && !myForm.originalUrl.$pristine" class="help-block">Please enter a value.</p>
-						</div>
+	<!-- THIS IS WHERE WE WILL INJECT OUR CONTENT ============================== -->
+	<div ui-view></div>
 
-						<div class="form-group">
-							<p class="text-center" ng-show="loading">
-								<span class="fa fa-spinner fa-spin fa-3x">
-									<div vc-recaptcha key="publicKey" ng-model="captchaResponse"></div>
-								</span>
-							</p>
-						</div>
 
-						<!-- createToDo() WILL CREATE NEW TODOS -->
-						<button type="submit" class="btn btn-primary btn-lg"  ng-disabled="myForm.$invalid" ng-click="shortenUrl()">Shorten Url</button>
-
-						<div ng-show="showGeneratedShortUrl" class="alert alert-success mr-top1">
-							<a ng-href="{{formData.shortUrl}}" target="_blank"> {{formData.shortUrl}} </a>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- ShortUrls LIST -->
-	<div class="container">
-
-		<div id="shorturls-list" class="row">
-			<div class="col-sm-12">
-				<!-- LOOP OVER THE shortUrls IN $scope.shortUrls -->
-				<table id="urlsDataTable" class="table table-striped table-bordered" cellspacing="0">
-					<thead>
-						<tr>
-							<th>Original Url </th>
-							<th>Short Url </th>
-							<th>Created</th>
-							<th>Total Clicks </th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="shortUrl in shortUrls">
-							<td>{{ shortUrl.originalUrl }}</td>
-							<td><a ng-href="{{ shortUrl.shortUrl }}" target="_blank"> {{ shortUrl.shortUrl }}</a></td>
-							<td>{{ shortUrl.differenceInHours }} hours ago</td>
-							<!-- {{ today | amDifference:  order.shipDate : 'days'}} days -->
-							<!-- <td>{{ shortUrl.createDateTime | date : "dd/MM/yyyy" }}</td> -->
-							<td>{{ shortUrl.clicksCount }}</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<p class="text-center" ng-show="loading">
-					<span class="fa fa-spinner fa-spin fa-3x"></span>
-				</p>
-			</div>
-		</div>
-
-		<div>
-			<canvas id="bar" class="chart chart-bar"
-			  chart-data="data" chart-labels="labels"> chart-series="series"
-			</canvas>
-		</div>
-
-		<hr>
-
-		<footer>
-			<p>&copy; 2017 URL Shortening.</p>
-		</footer>
-	</div> <!-- /container -->
 </body>
 </html>

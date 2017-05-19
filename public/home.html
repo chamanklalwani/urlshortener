@@ -1,0 +1,75 @@
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div ng-controller="mainController" class="jumbotron text-center">
+    <div class="container">
+        <!-- <h1>Url Shorten App <span class="label label-info">{{ shortUrls.length }}</span></h1> -->
+
+        <!-- Short Url Form -->
+        <div id="shorturls-form" class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-center">
+                <form name="myForm" role="form">
+                    <div class="form-group" ng-class="{ 'has-error' : myForm.originalUrl.$invalid && !myForm.originalUrl.$pristine }">
+                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+                        <input type="text" class="form-control input-lg text-center"
+                        id="originalUrl" name="originalUrl" required="required" autocomplete="off"
+                        placeholder="Enter original URL" ng-model="formData.originalUrl">
+                        <p ng-show="myForm.originalUrl.$invalid && !myForm.originalUrl.$pristine" class="help-block">Please enter a value.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <p class="text-center" ng-show="loading">
+                            <span class="fa fa-spinner fa-spin fa-3x">
+                                <div vc-recaptcha key="publicKey" ng-model="captchaResponse"></div>
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- createToDo() WILL CREATE NEW TODOS -->
+                    <button type="submit" class="btn btn-primary btn-lg"  ng-disabled="myForm.$invalid" ng-click="shortenUrl()">Shorten Url</button>
+
+                    <div ng-show="showGeneratedShortUrl" class="alert alert-success mr-top1">
+                        <a ng-href="{{formData.shortUrl}}" target="_blank"> {{formData.shortUrl}} </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ShortUrls LIST -->
+<div class="container">
+
+    <div id="shorturls-list" class="row">
+        <div class="col-sm-12">
+            <!-- LOOP OVER THE shortUrls IN $scope.shortUrls -->
+            <table id="urlsDataTable" class="table table-striped table-bordered" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Original Url </th>
+                        <th>Short Url </th>
+                        <th>Created</th>
+                        <!-- <th>Total Clicks </th> -->
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="shortUrl in shortUrls">
+                        <td>{{ shortUrl.originalUrl }}</td>
+                        <td><a ng-href="{{ shortUrl.shortUrl }}" target="_blank"> {{ shortUrl.shortUrl }}</a></td>
+                        <td>{{ shortUrl.differenceInHours }} hours ago</td>
+                        <!-- <td>{{ shortUrl.clicksCount }}</td> -->
+                        <td><a role="button" ng-click="redirectToDashboard(shortUrl._id)" target="_blank">View Dashboard</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="text-center" ng-show="loading">
+                <span class="fa fa-spinner fa-spin fa-3x"></span>
+            </p>
+        </div>
+    </div>
+    <hr>
+
+    <footer>
+        <p>&copy; 2017 URL Shortening.</p>
+    </footer>
+</div> <!-- /container -->
