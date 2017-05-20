@@ -4,7 +4,7 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 	$scope.myDomainName = "http://localhost:3000/sh/";
 	var table = null;
 	$scope.captchaResponse = null;
-		// google captcha public key
+	// google captcha public key
 	$scope.publicKey = "6LdfbyAUAAAAALYtVpdPl2uUNR0Sl1wt0j-tvAO3";
 	$scope.showGeneratedShortUrl = false;
     //$scope.options = {legend: {display: true}};
@@ -61,7 +61,6 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 						$scope.formData = {}; // clear the form so our user is ready to enter another
 						table.destroy();
 
-
 						$scope.shortUrls = response; // assign our new list of shorturls
 						$scope.formData.shortUrl = response[response.length-1].shortUrl;
 
@@ -92,9 +91,9 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 				$scope.loading = false;
 				$scope.shortUrls = response; // assign our new list of shorturls
 			});
-		};
+	};
 
-		$scope.getIdToShortUrl = function() {
+	$scope.getIdToShortUrl = function() {
 		// Map to store 62 possible characters
 		var map = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		var id = Date.now();
@@ -128,7 +127,9 @@ urlShortener.controller('mainController', ['$scope','$http','UrlShortenerService
 		if (navigator.userAgent.indexOf('Trident') != -1 || navigator.userAgent.indexOf('MSIE') != -1) {
 			return "Internet Explorer";
 		} else if (navigator.userAgent.indexOf('OPR/') != -1) {
-			return "Internet Explorer";
+			return "Opera";
+		} else if (navigator.userAgent.indexOf('Chrome/') != -1) {
+			return "Chrome";
 		}
 	};
 

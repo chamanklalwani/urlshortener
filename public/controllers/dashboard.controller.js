@@ -1,17 +1,9 @@
-urlShortener.controller('dashboardController', ['$scope', '$stateParams', 'UrlShortenerService' , function($scope, $stateParams, UrlShortenerService) {
+urlShortener.controller('dashboardController', ['$scope', '$stateParams', 'UrlShortenerService', '$timeout' , function($scope, $stateParams, UrlShortenerService, $timeout) {
 	$scope.data = {};
 	$scope.colors = ['#D61535', '#424141'];
 
 	$scope.init = function() {
 		$scope.id = $stateParams.id;
-
-		if($scope.id)	{
-			UrlShortenerService.getShortUrlByOriginalUrl($scope.id).then(function(response) {
-				$scope.data  = response.data;
-			}, function(failure) {
-
-			});
-		}
 	};
 
 	$scope.loadBarChart = function() {
@@ -23,7 +15,19 @@ urlShortener.controller('dashboardController', ['$scope', '$stateParams', 'UrlSh
 		};
 	};
 
-	$scope.init();
+	var getUrlDetails = function() {
+		if($scope.id) {
+			UrlShortenerService.getShortUrlByOriginalUrl($scope.id).then(function(response) {
+				$scope.data  = response.data;
+			}, function(failure) {
 
+			});
+
+			$timeout(getUrlDetails, 10000);
+		}
+	}
+
+	$scope.init();
+	getUrlDetails();
 	$scope.loadBarChart();
 }]);
