@@ -4,6 +4,9 @@
   "description": "Url Shortening application.",
   "main": "server.js",
   "author": "Chaman",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "angular-chart.js": "^1.1.1",
     "angular-recaptcha": "^4.1.0",

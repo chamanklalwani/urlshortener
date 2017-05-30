@@ -30,8 +30,8 @@ module.exports = function (app) {
     // api ---------------------------------------------------------------------
 
     /* GET api listing. */
-    app.get('/', (req, res) => {
-            res.send('api works');
+    app.get('/api/shortenurl/hello', (req, res) => {
+            res.send('ShortenUrl api is running');
     });
 
     // get shortUrl by id
