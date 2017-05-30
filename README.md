@@ -6,7 +6,7 @@ Node provides the RESTful API. Angular provides the frontend and accesses the AP
 
 ## Installation
 
-1. MongoDB
+## 1) MongoDB
 
 - MongoDB: (Local Configuration)
     If you have MongoDB installed on your machine, then configure it in `config/database.js`
@@ -21,7 +21,7 @@ docker run -p 27017:27017 -d --name db mongo
 Change localUrl value to 'db:27017/urlshortener' in 'config/database.js', Where 'db' is the name of mongo container.
 ```
 
-2. NodeJs Application
+## 2) NodeJs Application
 
 1. Clone the repository: `https://github.com/chamanklalwani/urlshortener.git`
 2. Build and Run "URL Shortener" app image:
